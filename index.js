@@ -1,33 +1,36 @@
-const mysql = require('mysql2/promise');
-const DB = require('./config/config');
+const express = require("express");
+const { connectToDatabase } = require("./models");
 
-async function connectToDatabase() {
-  try {
-    const connection = await mysql.createConnection({
-      host: DB.DB_HOST,
-      user: DB.DB_USER,
-      password: DB.DB_PASSWORD,
-      database: DB.DB_NAME,
-      port: DB.DB_PORT
-    });
-    console.log('Connected to the database');
-    return connection;
-  } catch (error) {
-    console.error('Error connecting to the database:', error);
-    throw error;
-  }
-}
+const app = express();
 
-const main = async () => {
-    const connection = await connectToDatabase();
+app.get("/", function (request, response) {
+  response.send("Halo Dunia");
+});
 
-    const [users] = await connection.query('SELECT * from users');
-    console.log('Users:', users);
+app.get("/about", function (req, res) {
+  res.send('<h2 style="color: skyblue;">Ini adalah halaman about</h2>');
+});
 
-    const [todos] = await connection.query('SELECT * FROM todos');
-    console.log('Todos:', todos);
+app.get("/users", async function (req, res) {
+  const connection = await connectToDatabase();
+  const [users] = await connection.query("SELECT * from users");
+  console.log("Users:", users);
+  await connection.end();
+  res.send(`
+      <pre>${JSON.stringify(users, null, 2)}</pre>
+    `);
+});
 
-    await connection.end();
-};
+app.get("/users/:id", async function (req, res) {
+  const connection = await connectToDatabase();
+  const [users] = await connection.query(`SELECT * from users WHERE id=${req.params.id}`);
+  console.log("Users:", users);
+  await connection.end();
+  res.send(`
+      <pre>${JSON.stringify(users, null, 2)}</pre>
+    `);
+});
 
-main();
+app.listen(5000, function () {
+  console.log("Server is running on http://localhost:5000");
+});
