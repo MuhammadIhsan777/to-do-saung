@@ -11,7 +11,7 @@ router.get("/", async function (req, res) {
 });
 
 router.get("/:id", async function (req, res) {
-    const user = await UserModel.getUserbyID(req.params.id);
+    const user = await UserModel.getUserbyID(req.params.id);4
     return res.json(user);
 });
 
