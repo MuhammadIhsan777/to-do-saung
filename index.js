@@ -49,4 +49,15 @@ app.get("/todos/:id", async function (req, res) {
 
 app.listen(5000, function () {
   console.log("Server is running on http://localhost:5000");
+
+const express = require("express");
+const app = express();
+
+app.use(express.json()); // biar bisa baca req.body JSON
+
+const categoriesRouter = require("./routes/categories");
+app.use("/categories", categoriesRouter);
+
+app.listen(5000, () => console.log("Server running on port 5000"));
+
 });
