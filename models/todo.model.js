@@ -31,12 +31,12 @@ async function getTodoById(id) {
   }
 }
 
-async function createTodo({ title, description = null, category_id = null, is_done = 0 }) {
+async function createTodo({ title, description = null, category_id = null, is_done = 0, user_id = 1, due_date }) {
   const conn = await connectToDatabase();
   try {
     const [res] = await conn.execute(
-      'INSERT INTO todos (title, description, category_id, is_done) VALUES (?,?,?,?)',
-      [title, description, category_id, is_done ? 1 : 0]
+      'INSERT INTO todos (title, description, category_id, is_done, user_id, due_date) VALUES (?,?,?,?,?,?)',
+      [title, description, category_id, is_done ? 1 : 0, user_id, due_date]
     );
     return { id: res.insertId, title, description, category_id, is_done: !!is_done };
   } finally {

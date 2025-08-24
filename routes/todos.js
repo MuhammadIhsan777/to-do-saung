@@ -14,9 +14,9 @@ router.get('/:id', async (req, res) => {
 });
 
 router.post('/', async (req, res) => {
-  const { title, description, category_id, is_done } = req.body || {};
+  const { title, description, category_id, is_done, user_id, due_date } = req.body || {};
   if (!title) return res.status(400).json({ message: 'title is required' });
-  const created = await Todo.createTodo({ title, description, category_id, is_done });
+  const created = await Todo.createTodo({ title, description, category_id, is_done, user_id, due_date });
   res.status(201).json(created);
 });
 

@@ -1,6 +1,7 @@
 const express = require("express");
 const { connectToDatabase } = require("./models");
 const usersRouter = require("./routes/users");
+const todosRouter = require("./routes/todos");
 
 const app = express();
 app.use(express.json());
@@ -14,6 +15,7 @@ app.get("/about", function (req, res) {
 });
 
 app.use("/users", usersRouter);
+app.use("/todos", todosRouter);
 
 app.get("/Categories", async function (req, res) {
   const connection = await connectToDatabase();
@@ -29,22 +31,6 @@ app.get("/Categories/:id", async function (req, res) {
   console.log("Categories:", categories);
   await connection.end();
   return res.json(categories);
-});
-
-app.get("/todos", async function (req, res) {
-  const connection = await connectToDatabase();
-  const [todos] = await connection.query("SELECT * from todos");
-  console.log("Todos:", todos);
-  await connection.end();
-  return res.json(todos);
-});
-
-app.get("/todos/:id", async function (req, res) {
-  const connection = await connectToDatabase();
-  const [todos] = await connection.query(`SELECT * from todos WHERE id=${req.params.id}`);
-  console.log("Todos:", todos);
-  await connection.end();
-  return res.json(todos);
 });
 
 app.listen(5000, function () {
