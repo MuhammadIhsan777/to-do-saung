@@ -1,59 +1,94 @@
-const { connectToDatabase } = require('./index');
+const { connectToDatabase } = require(".");
 
-async function getAllCategories() {
-  const conn = await connectToDatabase();
-  try {
-    const [rows] = await conn.query('SELECT * FROM categories ORDER BY id DESC');
-    return rows;
-  } finally {
-    await conn.end();
-  }
+class CategoryModel {
+
+    async getCategories() {
+        const connection = await connectToDatabase();
+
+        const [categories] = await connection.query("SELECT * from categories");
+
+        await connection.end();
+
+        return categories;
+    }
+
+    async getCategoryById(id) {
+        const connection = await connectToDatabase();
+
+        const [categories] = await connection.query(`SELECT * from categories WHERE id=${id}`);
+
+        console.log("Categories:", categories);
+
+        await connection.end();
+
+        return categories; 
+    }
+
+    async createCategory(categoryData) {
+        const {name, description} = categoryData;
+
+        const connection = await connectToDatabase();
+
+        const [result] = await connection.query(`
+        INSERT INTO
+            categories (name, description)
+         VALUES (?, ?)`, 
+            [name, description]
+        );
+
+        return result;  
+    }
+
+    async updateCategory(id, categoryData) {
+        const connection = await connectToDatabase(); 
+
+        //validasi di kolom categoryData tidak boleh ada ID 
+        if (categoryData.id) {
+            delete categoryData.id;
+        }
+    
+        //buatkan string dengan format [column] = ? => diisi dengan value
+        //pembuatan string tersebut berdasarkan categoryData
+        let updateString = '';
+        const values = [];
+
+        Object.keys(categoryData).forEach(key => {
+            //memasukkan column ke updateString
+            updateString += `${key} = ?,`
+
+            //memasukkan value ke values
+            values.push(categoryData[key]);
+        })
+
+        /*
+        {
+            *name*: "John Doe",
+            *nickname*: "johndoe",
+        }
+        Hasilnya:
+        name
+        !koma terakhir harus dihapus
+        */
+       //menghapus koma
+       updateString = updateString.slice(0, -1);
+
+       values.push(id);
+
+       const [result] = await connection.query(`UPDATE users SET ${updateString} WHERE id = ?`, values);
+
+       return result;
+
+    }
+
+    async deleteCategory(id) {
+        const connection = await connectToDatabase();
+
+        const [result] = await connection.query(`DELETE FROM categories WHERE id = ?`,  [id]);
+
+        await connection.end();
+
+        return result;
+    }
 }
 
-async function getCategoryById(id) {
-  const conn = await connectToDatabase();
-  try {
-    const [rows] = await conn.query('SELECT * FROM categories WHERE id = ?', [id]);
-    return rows[0] || null;
-  } finally {
-    await conn.end();
-  }
-}
-
-async function createCategory({ name }) {
-  const conn = await connectToDatabase();
-  try {
-    const [res] = await conn.execute('INSERT INTO categories (name) VALUES (?)', [name]);
-    return { id: res.insertId, name };
-  } finally {
-    await conn.end();
-  }
-}
-
-async function updateCategory(id, { name }) {
-  const conn = await connectToDatabase();
-  try {
-    const [res] = await conn.execute('UPDATE categories SET name = ? WHERE id = ?', [name, id]);
-    return res.affectedRows > 0;
-  } finally {
-    await conn.end();
-  }
-}
-
-async function deleteCategory(id) {
-  const conn = await connectToDatabase();
-  try {
-    const [res] = await conn.execute('DELETE FROM categories WHERE id = ?', [id]);
-    return res.affectedRows > 0;
-  } finally {
-    await conn.end();
-  }
-}
-
-module.exports = {
-  getAllCategories,
-  getCategoryById,
-  createCategory,
-  updateCategory,
-  deleteCategory,
-};
+module.exports = new CategoryModel;

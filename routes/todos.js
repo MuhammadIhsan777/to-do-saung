@@ -1,35 +1,39 @@
-const express = require('express');
-const Todo = require('../models/todo.model');
+const express = require("express");
+const { connectToDatabase } = require("../models");
+const TodoModel = require("../models/todo.model");
 const router = express.Router();
 
-router.get('/', async (req, res) => {
-  const rows = await Todo.getAllTodos();
-  res.json(rows);
+router.get("/", async (req, res, next) => {
+  try {
+    const todos = await TodoModel.getTodos();
+    res.json(todos);
+  } catch (e) { next(e); }
 });
 
-router.get('/:id', async (req, res) => {
-  const row = await Todo.getTodoById(req.params.id);
-  if (!row) return res.status(404).json({ message: 'Todo not found' });
-  res.json(row);
+
+router.get("/:id", async function (req, res) {
+    const todos = await TodoModel.getTodoById(req.params.id);
+    return res.json(todos);
 });
 
-router.post('/', async (req, res) => {
-  const { title, description, category_id, is_done, user_id, due_date } = req.body || {};
-  if (!title) return res.status(400).json({ message: 'title is required' });
-  const created = await Todo.createTodo({ title, description, category_id, is_done, user_id, due_date });
-  res.status(201).json(created);
+router.post("/", async function (req, res) {
+    const createTodo = await TodoModel.createTodo({
+        title: req.body.title,
+        description: req.body.description,
+    })
+    return res.json(createTodo);
 });
 
-router.put('/:id', async (req, res) => {
-  const ok = await Todo.updateTodo(req.params.id, req.body || {});
-  if (!ok) return res.status(404).json({ message: 'Todo not found' });
-  res.json({ message: 'updated' });
+router.delete('/:id', async function (req, res) {
+    const deleteTodo = await TodoModel.deleteTodo(req.params.id);
+    res.json({
+        success: deleteTodo.affectedRows > 0
+    });
 });
 
-router.delete('/:id', async (req, res) => {
-  const ok = await Todo.deleteTodo(req.params.id);
-  if (!ok) return res.status(404).json({ message: 'Todo not found' });
-  res.json({ message: 'deleted' });
-});
+router.put("/:id", async function (req, res) {
+    const updateTodo = await TodoModel.updateTodo(req.params.id, req.body);
+    return res.json(updateTodo);
+})
 
 module.exports = router;

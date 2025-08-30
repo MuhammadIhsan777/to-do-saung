@@ -1,76 +1,97 @@
-const { connectToDatabase } = require('./index');
+const { connectToDatabase } = require(".");
 
-async function getAllTodos() {
-  const conn = await connectToDatabase();
-  try {
-    const [rows] = await conn.query(
-      `SELECT t.*, c.name AS category_name
-       FROM todos t
-       LEFT JOIN categories c ON c.id = t.category_id
-       ORDER BY t.id DESC`
-    );
-    return rows;
-  } finally {
-    await conn.end();
-  }
+class TodoModel {
+
+    async getTodos() {
+        const connection = await connectToDatabase();
+
+        const [todos] = await connection.query("SELECT * from todos");
+
+        await connection.end();
+
+        return todos;
+    }
+
+    async getTodoById(id) {
+        const connection = await connectToDatabase();
+
+        const [todos] = await connection.query(`SELECT * from todos WHERE id=${id}`);
+
+        console.log("Todos:", todos);
+
+        await connection.end();
+
+        return todos; 
+    }
+
+    async createTodo(todoData) {
+        const {title, description} = todoData;
+
+        const connection = await connectToDatabase();
+
+        const [result] = await connection.query(`
+        INSERT INTO
+            todos (title, description)
+         VALUES (?, ?)`, 
+            [title, description]
+        );
+
+        return result;  
+    }
+
+    async updateTodo(id, todoData) {
+        const connection = await connectToDatabase(); 
+
+        //validasi di kolom todoData tidak boleh ada ID 
+        if (todoData.id) {
+            delete todoData.id;
+        }
+    
+        //buatkan string dengan format [column] = ? => diisi dengan value
+        //pembuatan string tersebut berdasarkan todoData
+        let updateString = '';
+        const values = [];
+
+        Object.keys(todoData).forEach(key => {
+            //memasukkan column ke updateString
+            updateString += `${key} = ?,`
+
+            //memasukkan value ke values
+            values.push(todoData[key]);
+        })
+
+        /*
+        {
+            *name*: "John Doe",
+            *nickname*: "johndoe",
+        }
+        Hasilnya:
+        name
+        !koma terakhir harus dihapus
+        */
+       //menghapus koma
+       updateString = updateString.slice(0, -1);
+
+       values.push(id);
+
+       const [result] = await connection.query(`UPDATE todos SET ${updateString} WHERE id = ?`, values);
+
+       return result;
+
+    }
+
+    async deleteTodo(id) {
+        const connection = await connectToDatabase();
+
+        const [result] = await connection.query(`DELETE FROM todos WHERE id = ?`,  [id]);
+
+        await connection.end();
+
+        return result;
+    }
 }
 
-async function getTodoById(id) {
-  const conn = await connectToDatabase();
-  try {
-    const [rows] = await conn.query(
-      `SELECT t.*, c.name AS category_name
-       FROM todos t
-       LEFT JOIN categories c ON c.id = t.category_id
-       WHERE t.id = ?`,
-      [id]
-    );
-    return rows[0] || null;
-  } finally {
-    await conn.end();
-  }
-}
 
-async function createTodo({ title, description = null, category_id = null, is_done = 0, user_id = 1, due_date }) {
-  const conn = await connectToDatabase();
-  try {
-    const [res] = await conn.execute(
-      'INSERT INTO todos (title, description, category_id, is_done, user_id, due_date) VALUES (?,?,?,?,?,?)',
-      [title, description, category_id, is_done ? 1 : 0, user_id, due_date]
-    );
-    return { id: res.insertId, title, description, category_id, is_done: !!is_done };
-  } finally {
-    await conn.end();
-  }
-}
 
-async function updateTodo(id, { title, description = null, category_id = null, is_done = 0 }) {
-  const conn = await connectToDatabase();
-  try {
-    const [res] = await conn.execute(
-      'UPDATE todos SET title = ?, description = ?, category_id = ?, is_done = ? WHERE id = ?',
-      [title, description, category_id, is_done ? 1 : 0, id]
-    );
-    return res.affectedRows > 0;
-  } finally {
-    await conn.end();
-  }
-}
-
-async function deleteTodo(id) {
-  const conn = await connectToDatabase();
-  try {
-    const [res] = await conn.execute('DELETE FROM todos WHERE id = ?', [id]);
-    return res.affectedRows > 0;
-  } finally {
-    await conn.end();
-  }
-}
-
-module.exports = {
-  getAllTodos,
-  getTodoById,
-  createTodo,
-  updateTodo,
-  deleteTodo,
-};
+// ⛳️ PENTING: export INSTANCE, bukan kelasnya
+module.exports = new TodoModel();

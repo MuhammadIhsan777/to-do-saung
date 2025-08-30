@@ -1,34 +1,43 @@
-const express = require('express');
-const Category = require('../models/category.model');
+const express = require("express");
+const { connectToDatabase } = require("../models");
+const CategoryModel = require("../models/category.model");
+
 const router = express.Router();
 
-router.get('/', async (req, res) => {
-  const rows = await Category.getAllCategories();
-  res.json(rows);
+router.get("/", async function (req, res) {
+    const categories = await CategoryModel.getAllCategories();
+    return res.json(categories);
 });
 
-router.get('/:id', async (req, res) => {
-  const row = await Category.getCategoryById(req.params.id);
-  if (!row) return res.status(404).json({ message: 'Category not found' });
-  res.json(row);
+router.get("/:id", async function (req, res) {
+    const category = await CategoryModel.getCategoryById(req.params.id);
+    return res.json(category);
 });
 
-router.post('/', async (req, res) => {
-  if (!req.body?.name) return res.status(400).json({ message: 'name is required' });
-  const created = await Category.createCategory({ name: req.body.name });
-  res.status(201).json(created);
+router.post("/", async function (req, res) {
+    const createCategory = await CategoryModel.createCategory(req.body);
+    return res.json(createCategory);
 });
 
-router.put('/:id', async (req, res) => {
-  const ok = await Category.updateCategory(req.params.id, { name: req.body.name });
-  if (!ok) return res.status(404).json({ message: 'Category not found' });
-  res.json({ message: 'updated' });
+router.put("/:id", async function (req, res) {
+    const updateCategory = await CategoryModel.updateCategory(req.params.id, req.body);
+    return res.json({ success: updateCategory.affectedRows > 0 });
 });
 
-router.delete('/:id', async (req, res) => {
-  const ok = await Category.deleteCategory(req.params.id);
-  if (!ok) return res.status(404).json({ message: 'Category not found' });
-  res.json({ message: 'deleted' });
+router.delete("/:id", async function (req, res) {
+    const deleteCategory = await CategoryModel.deleteCategory(req.params.id);
+    return res.json({ success: deleteCategory.affectedRows > 0 });
 });
 
-module.exports = router;
+
+router.delete('/:id', async function (req, res) {
+    const deleteCategory = await CategoriesModel.deleteCategory(req.params.id);
+    res.json({
+        success: deleteCategory.affectedRows > 0
+    });
+});
+
+router.put("/:id", async function (req, res) {
+    const updateCategory = await CategoryModel.updateCategory(req.params.id, req.body);
+    return res.json(updateCategory);
+})
