@@ -25,15 +25,15 @@ class CategoryModel {
     }
 
     async createCategory(categoryData) {
-        const {name, description} = categoryData;
+        const {kategori_name, created_at} = categoryData;
 
         const connection = await connectToDatabase();
 
         const [result] = await connection.query(`
         INSERT INTO
-            categories (name, description)
+            categories (kategori_name, created_at)
          VALUES (?, ?)`, 
-            [name, description]
+            [kategori_name, created_at]
         );
 
         return result;  
@@ -74,7 +74,7 @@ class CategoryModel {
 
        values.push(id);
 
-       const [result] = await connection.query(`UPDATE users SET ${updateString} WHERE id = ?`, values);
+       const [result] = await connection.query(`UPDATE categories SET ${updateString} WHERE id = ?`, values);
 
        return result;
 

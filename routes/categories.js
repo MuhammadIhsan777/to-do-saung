@@ -15,23 +15,15 @@ router.get("/:id", async function (req, res) {
 });
 
 router.post("/", async function (req, res) {
-    const createCategory = await CategoryModel.createCategory(req.body);
+    const createCategory = await CategoryModel.createCategory({
+        kategori_name: req.body.kategori_name,
+        created_at: new Date()
+    })
     return res.json(createCategory);
 });
 
-router.put("/:id", async function (req, res) {
-    const updateCategory = await CategoryModel.updateCategory(req.params.id, req.body);
-    return res.json({ success: updateCategory.affectedRows > 0 });
-});
-
-router.delete("/:id", async function (req, res) {
-    const deleteCategory = await CategoryModel.deleteCategory(req.params.id);
-    return res.json({ success: deleteCategory.affectedRows > 0 });
-});
-
-
 router.delete('/:id', async function (req, res) {
-    const deleteCategory = await CategoriesModel.deleteCategory(req.params.id);
+    const deleteCategory = await CategoryModel.deleteCategory(req.params.id);
     res.json({
         success: deleteCategory.affectedRows > 0
     });
@@ -41,3 +33,5 @@ router.put("/:id", async function (req, res) {
     const updateCategory = await CategoryModel.updateCategory(req.params.id, req.body);
     return res.json(updateCategory);
 })
+
+module.exports = router;

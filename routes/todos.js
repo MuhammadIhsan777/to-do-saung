@@ -18,8 +18,12 @@ router.get("/:id", async function (req, res) {
 
 router.post("/", async function (req, res) {
     const createTodo = await TodoModel.createTodo({
+        user_id: req.body.user_id,
         title: req.body.title,
         description: req.body.description,
+        due_date: req.body.due_date,
+        is_done: req.body.is_done
+
     })
     return res.json(createTodo);
 });

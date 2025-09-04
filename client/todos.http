@@ -1,11 +1,24 @@
 ###
-GET http://localhost:5000/todos
+GET http://localhost:5000/api/todos
 
 ###
-POST http://localhost:5000/todos
+GET http://localhost:5000/api/todos/1
 
 ###
-PUT http://localhost:5000/todos/3
+POST http://localhost:5000/api/todos
+Content-Type: application/json
+
+{
+  "user_id": 1,
+  "title": "makan",
+  "description": "makan itu penting",
+  "due_date": "2023-10-10",
+  "is_done": 0
+}
+
+
+###
+PUT http://localhost:5000/api/todos/3
 Content-Type: application/json
 
 {
@@ -13,13 +26,4 @@ Content-Type: application/json
 }
 
 ###
-DELETE http://localhost:5000/todos/3
-
-###
-PUT http://localhost:5000/todos/2
-Content-Type: application/json
-
-{
-  "title": "dunia itu indah",
-  "description": "Deskripsi baru  yang lebih baik"
-}
+DELETE http://localhost:5000/api/todos/3

@@ -25,15 +25,15 @@ class TodoModel {
     }
 
     async createTodo(todoData) {
-        const {title, description} = todoData;
+        const { user_id ,is_done, due_date ,title, description} = todoData;
 
         const connection = await connectToDatabase();
 
         const [result] = await connection.query(`
         INSERT INTO
-            todos (title, description)
-         VALUES (?, ?)`, 
-            [title, description]
+            todos (user_id, title, description, due_date, is_done)
+         VALUES (?, ?, ?, ?, ?)`, 
+            [user_id, title, description, due_date, is_done]
         );
 
         return result;  
@@ -92,6 +92,4 @@ class TodoModel {
 }
 
 
-
-// ⛳️ PENTING: export INSTANCE, bukan kelasnya
 module.exports = new TodoModel();

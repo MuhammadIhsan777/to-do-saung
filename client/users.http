@@ -1,11 +1,11 @@
-GET http://localhost:5000/users/
+GET http://localhost:5000/api/users/
 
 ###
-GET http://localhost:5000/users/13
+GET http://localhost:5000/api/users/13
 
 ###
 
-POST http://localhost:5000/users
+POST http://localhost:5000/api/users
 Content-Type: application/json
 
 {

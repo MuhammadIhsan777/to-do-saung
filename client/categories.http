@@ -1,14 +1,23 @@
 ###
-GET http://localhost:5000/categories
+GET http://localhost:5000/api/categories
 
 ###
-POST http://localhost:5000/categories 
+GET http://localhost:5000/api/categories/1
 
 ###
-DELETE http://localhost:5000/categories/3
+POST http://localhost:5000/api/categories
+Content-Type: application/json
+
+{
+  "kategori_name": "Pekerjaan",
+  "created_at": "2023-10-10"
+}
 
 ###
-PUT http://localhost:5000/categories/3
+DELETE http://localhost:5000/api/categories/3
+
+###
+PUT http://localhost:5000/api/categories/3
 Content-Type: application/json
 
 {
