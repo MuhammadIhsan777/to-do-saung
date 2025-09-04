@@ -1,7 +1,6 @@
 const express = require("express");
 const { connectToDatabase } = require("../models");
 const UserModel = require("../models/user.model");
-
 const router = express.Router();
 
 router.get("/", async function (req, res) {

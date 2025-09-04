@@ -55,7 +55,6 @@ class TodoModel {
         Object.keys(todoData).forEach(key => {
             //memasukkan column ke updateString
             updateString += `${key} = ?,`
-
             //memasukkan value ke values
             values.push(todoData[key]);
         })
@@ -71,22 +70,16 @@ class TodoModel {
         */
        //menghapus koma
        updateString = updateString.slice(0, -1);
-
        values.push(id);
-
        const [result] = await connection.query(`UPDATE todos SET ${updateString} WHERE id = ?`, values);
-
        return result;
 
     }
 
     async deleteTodo(id) {
         const connection = await connectToDatabase();
-
         const [result] = await connection.query(`DELETE FROM todos WHERE id = ?`,  [id]);
-
         await connection.end();
-
         return result;
     }
 }

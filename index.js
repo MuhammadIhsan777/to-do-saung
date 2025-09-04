@@ -38,7 +38,7 @@ app.get("/api/categories/:id", async function (req, res) {
   return res.json(categories);
 });
 
-///FRONTEND
+///FRONTEND TODOS
 app.get('/todos', async function(req, res) {
   return res.sendFile(path.join(__dirname, './views/todos/index.html'));
 })
@@ -46,3 +46,14 @@ app.get('/todos', async function(req, res) {
 app.listen(5000, function () {
   console.log("Server is running on http://localhost:5000");
 });
+
+//FRONTEND CATEGORIES
+app.get('/categories', async function(req, res) {
+  return res.sendFile(path.join(__dirname, './views/categories/index.html'));
+})
+
+app.listen(5000, function () {
+  console.log("Server is running on http://localhost:5000");
+});
+
+

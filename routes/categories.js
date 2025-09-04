@@ -4,9 +4,11 @@ const CategoryModel = require("../models/category.model");
 
 const router = express.Router();
 
-router.get("/", async function (req, res) {
-    const categories = await CategoryModel.getAllCategories();
-    return res.json(categories);
+router.get("/", async (req, res, next) => {
+  try {
+    const categories = await CategoryModel.getCategories();
+    res.json(categories);
+  } catch (e) { next(e); }
 });
 
 router.get("/:id", async function (req, res) {
