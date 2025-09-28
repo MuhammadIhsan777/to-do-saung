@@ -6,7 +6,7 @@ class TodoModel {
         const connection = await connectToDatabase();
 
         const [todos] = await connection.query("SELECT * from todos");
-
+            
         await connection.end();
 
         return todos;
