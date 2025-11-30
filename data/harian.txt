@@ -1,0 +1,43 @@
+Data Pribadi
+
+Nama : Muhammad Ihsan
+Umur : 17
+TTL : 28, April, 2008, Sukabumi
+NIK : 242310230
+NISN : 0084436506
+Hobi : Mengetik, dan bermain Voli
+Tempat Tinggal : Benda
+Warna Kesukaan : Grey
+Makanan Kesukaan : Mie disaat Hujan
+Minuman Kesukaan : Air Putih
+Cita cita : Pengusaha
+
+Data Keseharian
+
+Tanggal 02 Oktober
+- Bangun jam 05.00
+- Sarapan nasi goreng
+- Berangkat ke sekolah jam 06:10
+- Sekolah sampai jam 16:00
+- Ngerjain tugas sejarah di rumah
+- Mandi pakai air hangat
+- Tidur pukul 21:00
+
+Tanggal 03 Oktober
+- Bangun jam 05.00
+- Sarapan kentang balado
+- Berangkat ke sekolah jam 06:10
+- Sekolah sampai jam 15:20
+- Ngerjain tugas sekolah di rumah
+- Mandi pakai air hangat
+- Tidur pukul 21:30
+
+Tanggal 04 Oktober
+- Bangun jam 04.30
+- Sarapan telur dadar
+- Berangkat ke sekolah jam 06:10
+- Sekolah sampai jam 14:30
+- Ngerjain tugas sekolah di rumah
+- Mandi pakai air hangat
+- Tidur pukul 21:30
+

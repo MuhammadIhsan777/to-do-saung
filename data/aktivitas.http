@@ -1,0 +1,36 @@
+GET http://localhost:11434
+
+###
+
+POST http://localhost:11434/api/generate
+Content-Type: application/json
+
+{
+  "model": "gemma3:1b",
+  "prompt": "diberikan data berikut : \"Nama : Muhammad Ihsan, Umur : 17, TTL : 28, April, 2008, Sukabumi, NIK : 242310230, NISN : 0084436506, Hobi : Mengetik, dan bermain Voli, Tempat Tinggal : Benda",
+   "stream": false
+}
+
+###
+POST http://localhost:11434/api/chat
+Content-Type: application/json
+
+
+{
+  "model": "gemma3:1b",
+  "messages": [
+    {
+      "role": "user",
+      "content": "diberikan data berikut: [{Bangun jam 05:00}, {Sarapan}, {Berangkat sekolah}, {Belajar di kelas}, {Istirahat}, {Makan siang}, {Kembali belajar}, {Pulang sekolah}, {Mengerjakan PR}, {Bermain}, {Makan malam}, {Tidur}]"
+    },
+    {
+      "role": "assistant",
+      "content": "Ada yang bisa saya bantu terkait data tersebut?"
+    },
+    {
+      "role": "user",
+      "content": "apa yang dilakukan Ihsan setelah sarapan?"
+    }
+  ],
+  "stream": false
+}

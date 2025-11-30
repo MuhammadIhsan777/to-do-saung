@@ -34,3 +34,12 @@ Content-Type: application/json
   ],
   "stream": false
 }
+
+###
+GET https://localhost:5000/api/ollama/chat
+
+Content-Type: application/json
+
+{
+  "content" : "mengapa indonesia tidak memiliki perserikatan"
+}
