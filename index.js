@@ -5,6 +5,7 @@ const usersRouter = require('./routes/users');
 const ollamaRouter = require('./routes/ollama');
 const authRouter = require('./routes/auth');
 const cors = require('cors');
+const proxy=require('express-http-proxy');
 
 const categoryRouter = require('./routes/categories');
 const todosRouter = require('./routes/todos');
@@ -39,7 +40,10 @@ app.use("/api/todos", todosRouter);
 app.use("/api/ollama", ollamaRouter);
 app.use("/api/auth", authRouter);
 
-//frontend todos
+//frontend todos.6
+
+app.use('/', proxy('http://localhost:5173'));
+
 app.get('/todos', async function(req, res) {
   return res.sendFile(path.join(__dirname , './views/todos/index.html'))
 })
